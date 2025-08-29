@@ -5,9 +5,23 @@
     "home_page_url": "https://cmx4520.github.io",
     "feed_url": "https://cmx4520.github.io/feed.json",
     "user_comment": "",
+    "icon": "https://cmx4520.github.io/media/website/PixPin_2025-08-29_15-47-32.png",
     "author": {
         "name": "songzixian"
     },
     "items": [
+        {
+            "id": "https://cmx4520.github.io/incar-dian-zi-bu-can-shu-yi-ban-jian-yi/",
+            "url": "https://cmx4520.github.io/incar-dian-zi-bu-can-shu-yi-ban-jian-yi/",
+            "title": "INCAR 电子步参数一般建议",
+            "content_html": "\n    <figure class=\"post__image post__image--center\">\n      <img loading=\"lazy\" src=\"https://cmx4520.github.io/media/posts/2/bb3ecabc-606a-412a-b0aa-727073207e67.png\" height=\"847\" width=\"1280\" alt=\"\"  sizes=\"(max-width: 1920px) 100vw, 1920px\" srcset=\"https://cmx4520.github.io/media/posts/2/responsive/bb3ecabc-606a-412a-b0aa-727073207e67-xs.png 640w ,https://cmx4520.github.io/media/posts/2/responsive/bb3ecabc-606a-412a-b0aa-727073207e67-sm.png 768w ,https://cmx4520.github.io/media/posts/2/responsive/bb3ecabc-606a-412a-b0aa-727073207e67-md.png 1024w ,https://cmx4520.github.io/media/posts/2/responsive/bb3ecabc-606a-412a-b0aa-727073207e67-lg.png 1366w ,https://cmx4520.github.io/media/posts/2/responsive/bb3ecabc-606a-412a-b0aa-727073207e67-xl.png 1600w ,https://cmx4520.github.io/media/posts/2/responsive/bb3ecabc-606a-412a-b0aa-727073207e67-2xl.png 1920w\">\n      \n    </figure>",
+            "author": {
+                "name": "songzixian"
+            },
+            "tags": [
+            ],
+            "date_published": "2025-08-29T20:29:21+08:00",
+            "date_modified": "2025-08-29T20:29:54+08:00"
+        }
     ]
 }
