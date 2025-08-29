@@ -11,6 +11,34 @@
     },
     "items": [
         {
+            "id": "https://cmx4520.github.io/biao-mian-neng-ji-suan/",
+            "url": "https://cmx4520.github.io/biao-mian-neng-ji-suan/",
+            "title": "表面能计算",
+            "summary": "https://mp.weixin.qq.com/s/ktW8DggZ-i0ow6XHgVUTnQ http://bbs.keinsci.com/forum.php?mod=viewthread&amp;tid=9035&amp;extra=page%3D1 计算步骤 计算slab的能量 计算bulk的能量 计算表面积的大小 处理数据 https://zhuanlan.zhihu.com/p/596428078",
+            "content_html": "<p><a href=\"https://mp.weixin.qq.com/s/ktW8DggZ-i0ow6XHgVUTnQ\">https://mp.weixin.qq.com/s/ktW8DggZ-i0ow6XHgVUTnQ</a>\n<a href=\"http://bbs.keinsci.com/forum.php?mod=viewthread&tid=9035&extra=page%3D1\">http://bbs.keinsci.com/forum.php?mod=viewthread&amp;tid=9035&amp;extra=page%3D1</a>\n计算步骤</p><ol>\n<li>计算slab的能量</li>\n<li>计算bulk的能量</li>\n<li>计算表面积的大小</li>\n<li>处理数据\n<a href=\"https://zhuanlan.zhihu.com/p/596428078\">https://zhuanlan.zhihu.com/p/596428078</a></li>\n</ol>\n",
+            "author": {
+                "name": "songzixian"
+            },
+            "tags": [
+            ],
+            "date_published": "2025-08-29T21:07:23+08:00",
+            "date_modified": "2025-08-29T21:07:23+08:00"
+        },
+        {
+            "id": "https://cmx4520.github.io/uzhi-de-que-ding/",
+            "url": "https://cmx4520.github.io/uzhi-de-que-ding/",
+            "title": "U值的确定",
+            "summary": "针对Ac元素，一系列U值测试，寻找能量最低的U值，方法合适。从计算结果可知，Ac元素U值为3 eV；同样对于Th元素，U=1 eV 比较合适。对于锕系材料，通过结构化学寻找最低能量对应U值是一种可靠方法，另外如有实验值（eg 晶格参数、磁矩等），建议与实验值比较，再选取对应U值。",
+            "content_html": "<p>针对Ac元素，一系列U值测试，寻找能量最低的U值，方法合适。从计算结果可知，Ac元素U值为3 eV；同样对于Th元素，U=1 eV 比较合适。对于锕系材料，通过结构化学寻找最低能量对应U值是一种可靠方法，另外如有实验值（eg 晶格参数、磁矩等），建议与实验值比较，再选取对应U值。</p>",
+            "author": {
+                "name": "songzixian"
+            },
+            "tags": [
+            ],
+            "date_published": "2025-08-29T21:05:34+08:00",
+            "date_modified": "2025-08-29T21:05:34+08:00"
+        },
+        {
             "id": "https://cmx4520.github.io/incar-dian-zi-bu-can-shu-yi-ban-jian-yi/",
             "url": "https://cmx4520.github.io/incar-dian-zi-bu-can-shu-yi-ban-jian-yi/",
             "title": "INCAR 电子步参数一般建议",
