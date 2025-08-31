@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>结构优化 | Hexo</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="结构优化 | Hexo">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="态密度计算态密度（DOS）计算需要自洽计算输出的 CHGCAR 和 WAVECAR。 另外 DOS 计算还需要更密的 K 点网格，因此 KPOINTS 不妨取自洽计算的两倍甚至更大。 INCAR 的关键参数是 IBRION、LORBIT 和 NEDOS，另外设置 ISMEAR &#x3D; -5 能获得更平滑的 DOS。 这里给出一个态密度计算的 INCAR 示例： 12345678910111213141">
+<meta property="og:type" content="article">
+<meta property="og:title" content="能带态密度计算">
+<meta property="og:url" content="http://example.com/2025/08/31/%E8%83%BD%E5%B8%A6%E6%80%81%E5%AF%86%E5%BA%A6%E8%AE%A1%E7%AE%97/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="态密度计算态密度（DOS）计算需要自洽计算输出的 CHGCAR 和 WAVECAR。 另外 DOS 计算还需要更密的 K 点网格，因此 KPOINTS 不妨取自洽计算的两倍甚至更大。 INCAR 的关键参数是 IBRION、LORBIT 和 NEDOS，另外设置 ISMEAR &#x3D; -5 能获得更平滑的 DOS。 这里给出一个态密度计算的 INCAR 示例： 12345678910111213141">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://wcnpdj8tmxb1.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTk3M2NhODM5ZmMzNDU5MTQzY2M4YjFmNWE5ODBkZWNfRDZSMU5VR2hwc2Y2ZjVuZ0M4d3dtVU9INXhLWXFBZHpfVG9rZW46RHFVTWI4N0Fsb1B2V0h4UmRVMWN0VllNbmZjXzE3NTY2MTg3Nzg6MTc1NjYyMjM3OF9WNA">
+<meta property="og:image" content="https://wcnpdj8tmxb1.feishu.cn/space/api/box/stream/download/asynccode/?code=NzcxOWUzOGEwYWYwZjYwNmYyMGJmZGY2Yzk2ZGM5NjlfZ2ZGcjFjQ21UbTlNYW44cVFZSURMTmEwajJaWFZUQ0lfVG9rZW46SGdWUWIwNmV0b000TEt4dDVJSmM1alU4bkRkXzE3NTY2MTg3Nzg6MTc1NjYyMjM3OF9WNA">
+<meta property="og:image" content="https://wcnpdj8tmxb1.feishu.cn/space/api/box/stream/download/asynccode/?code=N2U0MjY2MTk2ODFiMDNiMjU4NTY1MzQ2NjU5NTg5YmRfc25Oa1EyS2p4aG4zalozbmJuMUE3VGNJck1ITk5KZUlfVG9rZW46V09BYWI0ZGJBb1c0VFl4QUs5bGNMUDFjbk1mXzE3NTY2MTg3Nzg6MTc1NjYyMjM3OF9WNA">
+<meta property="og:image" content="https://wcnpdj8tmxb1.feishu.cn/space/api/box/stream/download/asynccode/?code=MTA3MjYzNmY1YWZjNTE5M2M0MGQ4NDA2Zjk2ZDE5NjFfTm1WellTbWFQRmtqajQzdlQzbXFQT2VqQ3hkdVBRMkVfVG9rZW46WUEyb2IzSGtDb3o1MVp4QTdtYmMzM0Vpbm9lXzE3NTY2MTg3Nzg6MTc1NjYyMjM3OF9WNA">
+<meta property="article:published_time" content="2025-08-31T05:39:52.000Z">
+<meta property="article:modified_time" content="2025-08-31T05:40:02.916Z">
+<meta property="article:author" content="Zixian Song">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wcnpdj8tmxb1.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTk3M2NhODM5ZmMzNDU5MTQzY2M4YjFmNWE5ODBkZWNfRDZSMU5VR2hwc2Y2ZjVuZ0M4d3dtVU9INXhLWXFBZHpfVG9rZW46RHFVTWI4N0Fsb1B2V0h4UmRVMWN0VllNbmZjXzE3NTY2MTg3Nzg6MTc1NjYyMjM3OF9WNA">
+
+
+<link rel="icon" href="/img/avatar.jpg">
+
+<link href="/css/style.css?v=1.1.0" rel="stylesheet">
+
+<link href="/css/hl_theme/sublime.css?v=1.1.0" rel="stylesheet">
+
+<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="/js/titleTip.js?v=1.1.0" ></script>
+
+<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.1.0" ></script>
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="">
+  <input class="theme_blog_path" value="">
+  <input id="theme_shortcut" value="true" />
+  <input id="theme_highlight_on" value="true" />
+  <input id="theme_code_copy" value="true" />
+</div>
+
+
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/"
+   class="avatar_target">
+    <img class="avatar"
+         src="/img/avatar.jpg"/>
+</a>
+<div class="author">
+    <span>Zixian Song</span>
+</div>
+
+<div class="icon">
+    
+        
+            <a title="rss"
+               href="/atom.xml"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-rss"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="github"
+               href="https://github.com/cmx4520"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-github"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="email"
+               href="mailto:songzixian@shu.edu.cn"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-email"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="qq"
+               href="http://wpa.qq.com/msgrd?v=3&uin=2352108880&site=qq&menu=yes"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-qq"></use>
+                    </svg>
+                
+            </a>
+        
+    
+</div>
+
+
+
+
+
+<ul>
+    <li>
+        <div class="all active" data-rel="All">All
+            
+                <small>(4)</small>
+            
+        </div>
+    </li>
+    
+        
+            
+                
+    <li>
+        <div data-rel="计算化学">
+            <i class="fold iconfont icon-right"></i>
+            计算化学
+            <small>(2)</small>
+        </div>
+        
+            <ul class="sub hide">
+                
+                    
+    <li>
+        <div data-rel="计算化学&lt;---&gt;DFT">
+            
+            DFT
+            <small>(2)</small>
+        </div>
+        
+    </li>
+
+                
+            </ul>
+        
+    </li>
+
+            
+        
+    
+        
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+        
+            
+            
+            
+    </div>
+    <div>
+        
+            <a class="about  hasFriend  site_url"
+               
+               href="/about">About</a>
+        
+        <a style="width: 50%"
+                
+                                           class="friends">Friends</a>
+        
+    </div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="4">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        Links
+        <i class="iconfont icon-left"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="search shortcut key i"></i>
+            <div class="right-title">All</div>
+            <i class="iconfont icon-file-tree" data-title="switch to outline view shortcut key w"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="return"></i>
+            <input id="local-search-input" autocomplete="off"/>
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="case sensitive"></i>
+            <i class="iconfont icon-tag" data-title="label"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">outline</div>
+            <i class="iconfont icon-list" data-title="switch to article list"></i>
+        </div>
+    </div>
+
+    <div class="tags-list">
+    <input id="tag-search" />
+    <div class="tag-wrapper">
+        
+    </div>
+
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        
+        <a  class="All 计算化学 DFT "
+           href="/2025/08/31/%E8%83%BD%E5%B8%A6%E6%80%81%E5%AF%86%E5%BA%A6%E8%AE%A1%E7%AE%97/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="能带态密度计算">能带态密度计算</span>
+            <span class="post-date" title="2025-08-31 13:39:52">2025/08/31</span>
+        </a>
+        
+        
+        <a  class="All 计算化学 DFT "
+           href="/2025/08/31/%E7%BB%93%E6%9E%84%E4%BC%98%E5%8C%96/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="结构优化">结构优化</span>
+            <span class="post-date" title="2025-08-31 13:37:29">2025/08/31</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2025/08/30/%E5%85%B3%E4%BA%8E%E6%88%91/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="关于我">关于我</span>
+            <span class="post-date" title="2025-08-30 22:04:36">2025/08/30</span>
+        </a>
+        
+        
+        <a  class="All "
+           href="/2025/08/30/hello-world/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Hello World">Hello World</span>
+            <span class="post-date" title="2025-08-30 21:34:11">2025/08/30</span>
+        </a>
+        
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle" data-title="Toggle full screen shortcut key s">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div id="post">
+    <div class="pjax">
+        <article id="post-结构优化" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">结构优化</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="计算化学">计算化学</a> > 
+            
+            <a  data-rel="计算化学&lt;---&gt;DFT">DFT</a>
+            
+        </span>
+        
+        
+    </div>
+    <div class="article-meta">
+        
+            Created At : <time class="date" title='Updated At: 2025-08-31 13:38:45'>2025-08-31 13:37</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        <span id="busuanzi_container_page_pv">
+            Views 👀 :<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9B%B6%E3%80%81%E5%89%8D%E8%A8%80"><span class="toc-text">零、前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81POSCAR"><span class="toc-text">一、POSCAR</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81KPOINTS"><span class="toc-text">二、KPOINTS</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81POTCAR"><span class="toc-text">三、POTCAR</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81INCAR"><span class="toc-text">四、INCAR</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%8F%90%E4%BA%A4%E8%84%9A%E6%9C%AC"><span class="toc-text">五、提交脚本</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="零、前言"><a href="#零、前言" class="headerlink" title="零、前言"></a>零、前言</h1><p>vasp 在计算时需要 INCAR（控制文件），POSCAR（晶格位置文件或者结构文件），POTCAR（赝势文件），KPOINTS（是 k 点路径），四个输入文件以及一个运行文件 vasp.x.x.x.sh。一般只要有了 POSCAR 其他的三个文件可以可以通过 vaspkit 得到。结构优化是一切计算的基础。</p>
+<h1 id="一、POSCAR"><a href="#一、POSCAR" class="headerlink" title="一、POSCAR"></a>一、POSCAR</h1><p>POSCAR 文件的生成可以由 CIF 文件用 VESTA(<a target="_blank" rel="noopener" href="http://jp-minerals.org/vesta/en/download.html">下载地址</a>)导出</p>
+<p>File | Export Data</p>
+<p><img src="https://wcnpdj8tmxb1.feishu.cn/space/api/box/stream/download/asynccode/?code=N2U4NDIwMjFmMGEwZTlmZjgxYjFmMTVmZjU4ZmFiZTRfZEJ6TTZwQnQzYjlqNFROUWVFbTM1MEh1aWtvQVpNWTNfVG9rZW46VGVuOWJQTzU1b0VhaVp4Q2dZUmN1ek0zbjhjXzE3NTY2MTg2MzQ6MTc1NjYyMjIzNF9WNA"><img src="https://wcnpdj8tmxb1.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjcwYjMwMzg1OTc1MTU2ZjYxZWE0OTI2NGQ2N2IwNzhfSUkyMGwyOFN3dGtqV1UxUTVVbTFFaDlaN2JLbElOVzhfVG9rZW46S2s1SGJGdmZNb2hRY0J4OTRUUGNMTDl6bmtoXzE3NTY2MTg2MzQ6MTc1NjYyMjIzNF9WNA"></p>
+<p><img src="https://wcnpdj8tmxb1.feishu.cn/space/api/box/stream/download/asynccode/?code=YWZkNTk4MzkyMWI5MmJiNmVmMWJkZjM1ZTNmMjU3MGZfYzNZM0F6bGdEVkNDOE1CM0tuR3VicmpvV1BZQkcyRFlfVG9rZW46QTZSMWJHMTF1b0dWd294N0Yxa2NXMnU0bmtoXzE3NTY2MTg2MzQ6MTc1NjYyMjIzNF9WNA"></p>
+<p><img src="https://wcnpdj8tmxb1.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDRlOTMwZGU3MDQxNzgyOGM5MjUwM2M1NWZiZTFjMDdfSWpWcU5FcmwydTZHV1JmVHU2bEhEUmJWa0NrakR0TkVfVG9rZW46UjlMeGI2WjM3b2plZzZ4Z2dPNmNLRzJVbmZoXzE3NTY2MTg2MzQ6MTc1NjYyMjIzNF9WNA"></p>
+<p>将保存的 vasp 文件重命名为 POSCAR，这就是 POSCAR 文件</p>
+<h1 id="二、KPOINTS"><a href="#二、KPOINTS" class="headerlink" title="二、KPOINTS"></a>二、KPOINTS</h1><p>KPOINTS 的建议取值下图， 每个晶格矢量的长度乘以这个方向上的 k 点数。注意要测试收敛性。</p>
+<p>比如我要算一个绝缘体，a，b 的晶胞长度为 5 Å，c 的长度为 15 Å。则 K 点取 3 3 1</p>
+<p><img src="https://wcnpdj8tmxb1.feishu.cn/space/api/box/stream/download/asynccode/?code=MjkxZjM2ZTViYzU4MjYwMGFmMTc5NDkyYTRiNTdjOTBfZlZqeERKM1J4cHBRS2NpWnRWOGxGQTV2MjNpdEpTVzdfVG9rZW46QkJnWWJMbURvb256aGR4T1pXaGNTUTBTbjZwXzE3NTY2MTg2MzQ6MTc1NjYyMjIzNF9WNA"></p>
+<p><img src="https://wcnpdj8tmxb1.feishu.cn/space/api/box/stream/download/asynccode/?code=OThmNzRiMmM2M2E1NzAxNzZkNTFjNDlhYzllY2UzMGNfYzNkY0o0U1NpVzg4Wk1UNVc3cDV0S0NTQlNVUmJ6dmNfVG9rZW46QkZveWJMNkJ4b0ZHYWV4QjhMV2N3RlNZbkpmXzE3NTY2MTg2MzQ6MTc1NjYyMjIzNF9WNA"><img src="https://wcnpdj8tmxb1.feishu.cn/space/api/box/stream/download/asynccode/?code=ZWQ2MTczNDVjODY2NDYzMjNlYjE0MzBjYTI0YjBhZmRfcG1hTlNoWG9JcnY4dVhOMERPbUFvSmY3dUNqbDZlYjZfVG9rZW46VWZpamIwWDRsb05vOWl4Zm5Sd2NyWGR6bjVkXzE3NTY2MTg2MzQ6MTc1NjYyMjIzNF9WNA"></p>
+<h1 id="三、POTCAR"><a href="#三、POTCAR" class="headerlink" title="三、POTCAR"></a>三、POTCAR</h1><p><img src="https://wcnpdj8tmxb1.feishu.cn/space/api/box/stream/download/asynccode/?code=ZGUxODRiODMyYWU5OGUwOTBmMmE5NGM4MDBmMjNjOTdfSkNuM091cHFyUTJJWkdvT1pqUzRNOGtjbWU5elNOQWtfVG9rZW46WUVZZ2JzOHpub1pEY1N4eFJHSWNxMU9ubktkXzE3NTY2MTg2MzQ6MTc1NjYyMjIzNF9WNA"></p>
+<p><img src="https://wcnpdj8tmxb1.feishu.cn/space/api/box/stream/download/asynccode/?code=OTU4MmUyYjhhYzg4MjY0YjRjMmI1YmJjNzYxMDBmYTZfS1U5MW5YNXFOYnZYS1JtMUJnU0RlU0ZtMTNtMWhFUGFfVG9rZW46UlVZQmJYYUVPb3RrUmd4RU5Fb2NhSGtKbkVoXzE3NTY2MTg2MzQ6MTc1NjYyMjIzNF9WNA"><img src="https://wcnpdj8tmxb1.feishu.cn/space/api/box/stream/download/asynccode/?code=MDI2NjY5ODQxOWE2NmQ3NDhkMzE2MjI1Y2ZmMzA2OTlfbWhSeGJrR1p0Uk1HNHpDSkpTOVdZYjFZRkVkQnh4TTNfVG9rZW46WHExWGJzajdXb3VEYVV4dXA5V2NHRmszbngzXzE3NTY2MTg2MzQ6MTc1NjYyMjIzNF9WNA"></p>
+<p><img src="https://wcnpdj8tmxb1.feishu.cn/space/api/box/stream/download/asynccode/?code=NWQ5MDY1YjM4OWI4OTg1MWY3MGU0YzBiYzJiODJmMzdfOFJDVXF0eG5waEJWRGlLeXZ6U01jY1Q1emxPOEV5YnhfVG9rZW46QVZuNmJNaURwbzhibmZ4Wm9XZmNsakJabnhiXzE3NTY2MTg2MzQ6MTc1NjYyMjIzNF9WNA"><img src="https://wcnpdj8tmxb1.feishu.cn/space/api/box/stream/download/asynccode/?code=ODIwM2JiMjMzZGNlY2NmZWIxMGViYTQ1NjA2Yzk4Y2ZfRXVCd0pINkEyMkhGbkVTY0Z0M3M2VHBuWGlqY3h4NlZfVG9rZW46RXA1M2I2dmtlb1NYVXh4VmpEaGNXSFRkbldiXzE3NTY2MTg2MzQ6MTc1NjYyMjIzNF9WNA"></p>
+<p><img src="https://wcnpdj8tmxb1.feishu.cn/space/api/box/stream/download/asynccode/?code=NWIyYTVlN2Q2MjEwN2JmMDM1OGQ5YWRlZWM1ZjNiZDVfRTZDZ1p0Q2t1QnpLeHZCUkFaT1hXUUhCVktMOEZscDZfVG9rZW46Sk1zM2JjQVBhb2pKNml4aExjQmN4YTNCbkZlXzE3NTY2MTg2MzQ6MTc1NjYyMjIzNF9WNA"></p>
+<h1 id="四、INCAR"><a href="#四、INCAR" class="headerlink" title="四、INCAR"></a>四、INCAR</h1><p>生成 INCAR 文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qvasp -relax</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wcnpdj8tmxb1.feishu.cn/space/api/box/stream/download/asynccode/?code=NTk3YTYwMzQxZDc3M2IyOTRjOTZkODg1ZmQ2ODE0ODZfVUl5TTVsT3B3M2FtRzRldEpDQjZDYXV0SGtoS3JjVEhfVG9rZW46R1l4NGJuMTB2b01wSnp4Qjd1QWN5VTc5bkZmXzE3NTY2MTg2MzQ6MTc1NjYyMjIzNF9WNA"></p>
+<p>生成的 INCAR 文件及注释如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">SYSTEM =                <span class="comment"># 体系名称</span></span><br><span class="line"></span><br><span class="line">INCAR-basic</span><br><span class="line">   PREC   = Accurate    <span class="comment"># 精度设置:Accurate(高精度)、Normal或Low(初步测试用)</span></span><br><span class="line">   ENCUT  = <span class="number">500</span> eV      <span class="comment"># 平面波截断能量，单位eV;决定计算精度和效率</span></span><br><span class="line">                        <span class="comment"># grep ENMAX POTCAR</span></span><br><span class="line">   NELMIN = <span class="number">6</span>           <span class="comment"># 最小电子迭代次数，确保基础收敛过程</span></span><br><span class="line">   LREAL  = .FALSE.     <span class="comment"># 禁用实空间投影（若价电子数&gt;20可设为Auto）</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#   ALGO = Fast         # 电子弛豫算法:</span></span><br><span class="line">                        <span class="comment"># Normal(标准模式)、Fast或VeryFast(加速模式)   </span></span><br><span class="line">                        <span class="comment"># ALGO=normal矩阵对角化时先分割成子空间做对角化，能得到稳定波函数，不会发散，在初期使用。</span></span><br><span class="line">                        <span class="comment">#ALGO=C</span></span><br><span class="line">                        <span class="comment">#ALGO=V，类似于准牛顿算法，非金属表面优于CG算法，</span></span><br><span class="line">                        <span class="comment">#ALGO=F,先Davidson后RMM，前期保证收敛后期加快速度。</span></span><br><span class="line">                        <span class="comment">#对于大体系，速度上和收敛上推荐v,</span></span><br><span class="line">                        <span class="comment">#体系存在收敛困难时，推荐N,有帮助。</span></span><br><span class="line">   EDIFF  = <span class="number">1E-08</span>       <span class="comment"># SCF收敛阈值（更严格）</span></span><br><span class="line"><span class="comment">#  ISMEAR = 0</span></span><br><span class="line">   SIGMA  = <span class="number">0.05</span>        <span class="comment"># 展宽宽度（适用于半导体）(单位eV)，推荐值为0.0l~0.1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#   LDAU=.TRUE.         # LDA+U未启用</span></span><br><span class="line"><span class="comment">#   LDAUTYPE=2</span></span><br><span class="line"><span class="comment">#   LDAUL=-1 2</span></span><br><span class="line"><span class="comment">#   LDAUU=0  3</span></span><br><span class="line"><span class="comment">#   LDAUJ=0  0</span></span><br><span class="line"></span><br><span class="line">   ISPIN  = <span class="number">1</span>           <span class="comment"># 自旋极化选项:</span></span><br><span class="line">                        <span class="comment"># 1无自旋极化(适用于非磁性材料)</span></span><br><span class="line">                        <span class="comment"># 2自旋极化(适用于磁性材料)</span></span><br><span class="line"><span class="comment">#  MAGMOM = 3*1 -4 16*0 # 反铁磁未启用</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#   NCORE = 2</span></span><br><span class="line"><span class="comment">#   KPAR = 2</span></span><br><span class="line">    NCORE  = <span class="number">16</span>          <span class="comment"># 并行核数优化（原示例为2，根据计算资源调整）</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 离子弛豫设置(Ionic Relaxation)   </span></span><br><span class="line">   ICHARG = <span class="number">2</span>           <span class="comment"># 从POTCAR静态密度开始</span></span><br><span class="line">   EDIFFG = -<span class="number">0.01</span>       <span class="comment"># 力收敛阈值（0.01 eV/Å，原示例为-0.03）</span></span><br><span class="line">                        <span class="comment"># 离子收敛准则:</span></span><br><span class="line">                        <span class="comment"># 负值基于力(单位eV/A)</span></span><br><span class="line">                        <span class="comment"># 正值基于能量</span></span><br><span class="line">   NSW    = <span class="number">500</span>         <span class="comment"># 最大离子步数</span></span><br><span class="line">   IBRION = <span class="number">2</span>           <span class="comment"># 离子弛豫算法:</span></span><br><span class="line">                        <span class="comment"># 2使用共轭梯度算法(适用于大多数优化任务)</span></span><br><span class="line">   POTIM  = <span class="number">0.5</span>         <span class="comment"># 时间步长，控制优化过程速度</span></span><br><span class="line">   ISIF   = <span class="number">2</span>           <span class="comment"># 晶格优化选项:</span></span><br><span class="line">                        <span class="comment"># 2仅优化原于位置，不改变晶格参数</span></span><br><span class="line">                        <span class="comment"># 3优化原子和晶格形状</span></span><br><span class="line"><span class="comment">#  IOPTCELL= 1 0 0  0 1 0 0 0 0</span></span><br><span class="line">   PSTRESS= <span class="number">0</span>           <span class="comment"># 晶格应力权重</span></span><br><span class="line">   LCHARG = .FALSE.     <span class="comment"># 不输出CHGCAR(节省磁盘空间)</span></span><br><span class="line">   LWAVE  = .FALSE.     <span class="comment"># 不输出WAVECAR(节省磁盘空间)</span></span><br><span class="line">   ISYM =<span class="number">0</span>              <span class="comment"># 对称性设置:</span></span><br><span class="line">                        <span class="comment"># 0关闭对称性(适用于含缺陷或非对称结构)</span></span><br><span class="line">                        <span class="comment"># 1或2保留对称性操作</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Use &#x27;qvasp -p2c&#x27; to transfer format (VESTA or MS)</span></span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://wcnpdj8tmxb1.feishu.cn/wiki/AHCQwtmBfiaKMmk4oatcwFHXnvd?from=from_copylink">[转载] INCAR 参数设置</a></p>
+<p>主要需要调整的参数为 ENCUT、EDIFF、EDIFFG、ISIF、NCORE</p>
+<h1 id="五、提交脚本"><a href="#五、提交脚本" class="headerlink" title="五、提交脚本"></a>五、提交脚本</h1><p>理学院</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qsub vasp.5.4.1.pbs</span><br></pre></td></tr></table></figure>
+
+<p>CPU、GPU</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sbatch vasp.sh</span><br></pre></td></tr></table></figure>
+
+<p>六、查看排队情况</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qvasp</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wcnpdj8tmxb1.feishu.cn/space/api/box/stream/download/asynccode/?code=YzhjNDgxOWRiNjU0NzZkNjY0YjY3MTM2OGJlOTUzMGRfZjZqNU5lSG1hWUN5SlVidmk1RTRiY3pEVHNVREdmaWJfVG9rZW46TlNHd2JaRWpMb0FEMFd4bDhEcWNKR0o4bjRnXzE3NTY2MTg2MzQ6MTc1NjYyMjIzNF9WNA"></p>
+<p>查看计算进度脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="comment">#lipai@mail.ustc.edu.cnbegin=$1if [ $begin ==&#x27;&#x27; ]; then begin=0; fi  </span></span><br><span class="line">awk -v begin=<span class="variable">$begin</span> <span class="string">&#x27;/E0/&#123;if ( i&lt;begin  ) i++;else print $0 &#125;&#x27;</span> OSZICAR &gt;temp.e</span><br><span class="line">  </span><br><span class="line">awk <span class="string">&#x27;/POSITION/,/drift/&#123;</span></span><br><span class="line"><span class="string">    if(NF==6) print $4,$5,$6;</span></span><br><span class="line"><span class="string">    else if($1==&quot;total&quot;) print $1 &#125;&#x27;</span> OUTCAR &gt;temp.f</span><br><span class="line"></span><br><span class="line">awk <span class="string">&#x27;&#123;if($4==&quot;F&quot;||$4==&quot;T&quot;) print $4,$5,$6&#125;&#x27;</span> CONTCAR &gt;temp.fix</span><br><span class="line">flag=`<span class="built_in">wc</span> temp.fix|awk <span class="string">&#x27;&#123;print $1&#125;&#x27;</span>`steps=`grep E0 OSZICAR |<span class="built_in">tail</span> -1 |awk <span class="string">&#x27;&#123;print $1&#125;&#x27;</span>`<span class="keyword">if</span> [ flag != <span class="string">&#x27;0&#x27;</span> ] ; thenif [ -f temp.fixx ] ; <span class="keyword">then</span> <span class="built_in">rm</span> temp.fixx ; fifor i <span class="keyword">in</span> `<span class="built_in">seq</span> <span class="variable">$steps</span>`;<span class="keyword">do</span></span><br><span class="line">        <span class="built_in">cat</span> temp.fix &gt;&gt;temp.fixx</span><br><span class="line">        <span class="built_in">echo</span> &gt;&gt;temp.fixx</span><br><span class="line">    <span class="keyword">done</span></span><br><span class="line">    <span class="built_in">paste</span> temp.f temp.fixx &gt;temp.ff</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">awk  <span class="string">&#x27;&#123; if($1==&quot;total&quot;) &#123;print ++i,a;a=0&#125;</span></span><br><span class="line"><span class="string">        else &#123;</span></span><br><span class="line"><span class="string">            if($4==&quot;F&quot;) x=0; else x=$1;</span></span><br><span class="line"><span class="string">            if($5==&quot;F&quot;) y=0; else y=$2;</span></span><br><span class="line"><span class="string">            if($6==&quot;F&quot;) z=0; else z=$3;</span></span><br><span class="line"><span class="string">            force=sqrt(x^2+y^2+z^2);</span></span><br><span class="line"><span class="string">            if(a&lt;force) a=force&#125; &#125;&#x27;</span> temp.ff &gt;force.conv</span><br><span class="line"></span><br><span class="line">gnuplot &lt;&lt;<span class="string">EOF </span></span><br><span class="line"><span class="string">set term dumb</span></span><br><span class="line"><span class="string">set title &#x27;Energy of each ionic step&#x27;</span></span><br><span class="line"><span class="string">set xlabel &#x27;Ionic steps&#x27;</span></span><br><span class="line"><span class="string">set ylabel &#x27;Energy(eV)&#x27;</span></span><br><span class="line"><span class="string">plot &#x27;temp.e&#x27; u 1:5 w l  t &quot;Energy in eV&quot;</span></span><br><span class="line"><span class="string">set title &#x27;Max Force of each ionic step&#x27;</span></span><br><span class="line"><span class="string">set xlabel &#x27;Ionic steps&#x27;</span></span><br><span class="line"><span class="string">set ylabel &#x27;Force (eV/Angstrom)&#x27;</span></span><br><span class="line"><span class="string">plot &#x27;force.conv&#x27; w l t &quot;Force in eV/Angstrom&quot;</span></span><br><span class="line"><span class="string">EOFif [ $steps -gt 8 ] ; then</span></span><br><span class="line"><span class="string">tail -5 force.conv &gt;temp.fff</span></span><br><span class="line"><span class="string">tail -5 temp.e &gt;temp.ee</span></span><br><span class="line"><span class="string">gnuplot &lt;&lt;EOF</span> </span><br><span class="line"><span class="built_in">set</span> term dumb</span><br><span class="line"><span class="built_in">set</span> title <span class="string">&#x27;Energy of each ionic step for the last few steps&#x27;</span></span><br><span class="line"><span class="built_in">set</span> xlabel <span class="string">&#x27;Ionic steps&#x27;</span></span><br><span class="line"><span class="built_in">set</span> ylabel <span class="string">&#x27;Energy(eV)&#x27;</span></span><br><span class="line">plot <span class="string">&#x27;temp.ee&#x27;</span> u 1:5 w l  t <span class="string">&quot;Energy in eV&quot;</span></span><br><span class="line"><span class="built_in">set</span> title <span class="string">&#x27;Max Force of each ionic step for the last few steps&#x27;</span></span><br><span class="line"><span class="built_in">set</span> xlabel <span class="string">&#x27;Ionic steps&#x27;</span></span><br><span class="line"><span class="built_in">set</span> ylabel <span class="string">&#x27;Force (eV/Angstrom)&#x27;</span></span><br><span class="line">plot <span class="string">&#x27;temp.fff&#x27;</span> w l  t <span class="string">&quot;Force in eV/Angstrom&quot;</span></span><br><span class="line">EOF</span><br><span class="line"><span class="built_in">rm</span> temp.fff temp.ee</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">rm</span> temp.e temp.f temp.ff temp.fix temp.fixx</span><br></pre></td></tr></table></figure>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">💰</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">
+    ©2016-2020 Yelog
+</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full" data-title="Toggle full screen shortcut key s"><span class="min "></span></button>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>Help us with donation</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <img src="/img/weixin.jpg" class="weixin" title="扫码支持">
+        </div>
+    </div>
+    <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">alipay</label></span><span><label><input type="radio" name="pay" value="weixin">weixin</label></span>
+    </div>
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
+
+<script src="/js/script.js?v=1.1.0" ></script>
+<script>
+    var img_resize = 'default';
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $("#post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
